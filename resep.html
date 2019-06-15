@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="manifest" href="manifest.json"> 
+	<meta name="description" content="Food Blog"> 
+	<meta name="theme-color" content="#2F3BA2" /> 
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="crossorigin="anonymous"></script>
+	<!-- Include jQuery Mobile stylesheets -->
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+	<!-- Include the jQuery library -->
+	<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<!-- Include the jQuery Mobile library -->
+	<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	<link href="css/app.css" rel="stylesheet" />
+	<title>Food Blog</title>
+</head>
+<body>
+<div data-role="page" id="newPageId">
+        <div data-role="header" data-theme="b" style="text-align: center;">
+        <a href="#home" data-rel="back" class="ui-btn-left ui-btn  ui-btn-icon-notext ui-corner-all ui-icon-back">Back</a>
+        <h1><img src="images/32.png">
+        Food Blog</h1>
+    </div><!-- /header -->
+    <script type="text/javascript">
+        $("#newPageId").on("pageshow", onPageShow);
+
+        function onPageShow(e,data)
+        {
+            var id = sessionStorage.getItem("id_meal");
+            load_data(id);
+            // alert(id);
+
+        }
+        function load_data(id){
+        	// alert(id);
+        	const div1 = document.getElementById('isi_resep');
+			$('#isi_resep').html("");
+			var j="";
+			const url = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i='+id;
+			fetch(url)
+			.then((resp) => resp.json())
+			.then(function(data) {
+				let myData = data.meals;
+		        
+		        var id_meal=myData[0].idMeal;
+		        var nama_meal=myData[0].strMeal;
+		        var kategori_meal=myData[0].strCategory;
+		        var negara_meal=myData[0].strArea;
+		        var instruksi_meal=myData[0].strInstructions;
+		        var gambar_meal=myData[0].strMealThumb;
+
+		        j+="<h2>"+nama_meal+"</h2>";
+
+		        j+="<img height=150px width=150px src='"+gambar_meal+"' alt='Medium Pic'>";
+
+		        j+="<h3>Bahan :</h3>";
+
+		        for(var i=1;i<=12;i++){
+		        	var bahan="strIngredient"+i;
+		        	var ukuran="strMeasure"+i;
+		        	// alert(kata);
+		        	var bahan_meal=myData[0][bahan];
+		        	var ukuran_meal=myData[0][ukuran];
+		        	// alert(bahan_meal);
+		        	if(bahan_meal!=""){
+		        		j+=ukuran_meal+" "+bahan_meal+"<br>";
+		        	}
+		        }
+
+		        j+="<h3>Step :</h3>";
+
+		        j+="<div style='padding-left:20px;padding-right:20px; text-align:justify;'>"+instruksi_meal+"</div>";
+
+				$('#isi_resep').append(j);
+		    })
+			.catch(function(error) {
+				console.log(error);
+			});
+
+        }
+    </script>
+    <div class="ui-field-contain">
+    	<div id="isi_resep" style="text-align: center;"></div>
+    </div>
+</div>
+	
+</body>
+</html>>

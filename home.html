@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="manifest" href="manifest.json"> 
+	<meta name="description" content="Food Blog"> 
+	<meta name="theme-color" content="#2F3BA2" /> 
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="crossorigin="anonymous"></script>
+	<!-- Include jQuery Mobile stylesheets -->
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+	<!-- Include the jQuery library -->
+	<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<!-- Include the jQuery Mobile library -->
+	<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	<link href="css/app.css" rel="stylesheet" />
+	<title>Food Blog</title>
+	<style>
+	body{
+		font-size: calc(0.4em + 1.5vw);
+		line-height: calc(0.6em + 1vw);
+		font-family: 'Montserrat', sans-serif;
+	}
+	.flex-container{
+		display: flex;
+		flex-direction: row;
+		background-color: #ffffff;
+		flex-wrap: wrap;
+		flex-grow: 10;
+		justify-content: center;
+		color:white;
+	}
+	.flex-container > div{
+		flex-grow: 4;
+		width: 350px;
+	}
+	.myBox{
+		/*background-color:#ffffff;*/
+		background-color: black;
+		margin: 5px;
+		opacity: 0.9;
+		text-align: center;
+		padding: 5px;
+	}
+	/* Big*/
+	/*@media only screen and (max-width: 1200px) {
+	.myBox{
+		width:400px;
+		height: 400px;
+	}
+	}
+	/* Medium */
+	/*@media only screen and (max-width: 767px) {
+	.myBox{
+		width:250px;
+		height: 200px;
+	}
+	}*/
+	/* Small*/
+	/*@media only screen and (max-width: 480px) {
+	.myBox{
+		width:200px;
+		height: 150px;
+	}
+	
+	}*/
+</style>
+</head>
+<body>
+	<div data-role="page" id="home">
+		<!-- <button id="btnSave">Save</button> -->
+		<div data-role="header" data-theme="b" style="text-align: center;">
+            <h1><img src="images/32.png">
+            Food Blog</h1>
+        </div><!-- /header -->
+        <!-- <br> -->
+        <div data-role="content">
+        <div class="ui-field-contain">
+        	<!-- <label for="select-native-1">Pilih :</label> -->
+        	<select name="negara" id="negara" onchange="ubah_data()">
+			    <option value="British">British</option>
+			    <option value="American">American</option>
+			    <option value="French">French</option>
+			    <option value="Canadian">Canadian</option>
+			    <option value="Jamaican">Jamaican</option>
+			    <option value="Chinese">Chinese</option>
+			    <option value="Egyptian">Egyptian</option>
+			    <option value="Greek">Greek</option>
+			    <option value="Indian">Indian</option>
+			    <option value="Irish">Irish</option>
+			    <option value="Italian">Italian</option>
+			    <option value="Japanese">Japanese</option>
+			    <option value="Kenyan">Kenyan</option>
+			    <option value="Malaysian">Malaysian</option>
+			    <option value="Mexican">Mexican</option>
+			    <option value="Moroccan">Moroccan</option>
+			    <option value="Croatian">Croatian</option>
+			    <option value="Mexican">Mexican</option>
+			    <option value="Norwegian">Norwegian</option>
+			    <option value="Portuguese">Portuguese</option>
+			    <option value="Russian">Russian</option>
+			    <option value="Argentinian">Argentinian</option>
+			    <option value="Spanish">Spanish</option>
+			    <option value="Slovakian">Slovakian</option>
+			    <option value="Thai">Thai</option>
+			    <option value="Saudi Arabian">Saudi Arabian</option>
+			    <option value="Vietnamese">Vietnamese</option>
+			    <option value="Turkish">Turkish</option>
+			    <option value="Syrian">Syrian</option>
+			    <option value="Algerian">Algerian</option>
+			    <option value="Tunisian">Tunisian</option>
+			 </select>
+        </div>
+        </div>
+        <div id="judul"></div>
+		<!-- <h2 style="text-align: center;"> Makanan Amerika Serikat</h2> -->
+		<div class="flex-container" id="myData">
+		</div>
+	</div>
+
+	<script>
+		if ('serviceWorker' in navigator) { 
+			window.addEventListener('load', () => { 
+				navigator.serviceWorker.register('service-worker.js')
+				.then((reg) => { 
+					console.log('Service worker registered.', reg);
+				});
+			});
+		} 
+
+
+	</script>
+
+	<script>
+		$(document).ready(function(){
+		  	ubah_data();
+		});
+		function createNode(element) {
+			return document.createElement(element);
+		}
+		function append(parent, el) {
+			return parent.appendChild(el);
+		}
+		function ubah_data(){
+			const div1 = document.getElementById('myData');
+			var negara=$('#negara').val();
+			$('#judul').html("");
+			$('#myData').html("");
+			$('#judul').append('<h2 style="text-align: center;"> Makanan '+negara+'</h2>');
+			const url = 'https://www.themealdb.com/api/json/v1/1/filter.php?a='+negara;
+			fetch(url)
+			.then((resp) => resp.json())
+			.then(function(data) {
+				let mydata = data.meals;
+				// return myData.map(function(mydata) {
+					for(var i=0;i<mydata.length;i++){
+						let div = createNode('div'),
+						img = createNode('picture'),
+				        // pic = createNode('picture'),
+				        spanName = createNode('p');
+				        
+				        var id_meal=mydata[i].idMeal;
+
+				        div.classList.add("myBox");
+				        
+				        img.innerHTML = "<source media='(min-width:0px)' srcset='"+mydata[i].strMealThumb+"'><img height=150vh width=150vw src='"+mydata[i].strMealThumb+"' style='margin-bottom: auto;flex-grow: 1;' alt='Medium Pic'><button class='ui-btn ui-shadow ui-corner-all ui-btn-icon-right ui-icon-carat-r' style='margin-top: auto;' onclick='pindah_resep("+id_meal+")'>Check It</button><input type='text' value='"+id_meal+"' style='display:none;'>";
+				        spanName.innerHTML = mydata[i].strMeal;
+
+				        append(div, spanName);
+					    append(div, img);
+					    append(div1, div);
+
+					}
+					
+			      // pic.innerHTML = `<source height=10px width=10px media='(min-width:767px)' srcset='${mydata.strMealThumb}'><source media='(min-width:480px)' srcset='${mydata.strMealThumb}'><source media='(min-width:0px)' srcset='${mydata.strMealThumb}'><img src='${mydata.strMealThumb}' alt='Medium Pic'>`
+
+			      
+			      
+			      // var id_meal=`${mydata.idMeal}`;
+			      // alert(idMeal);
+			      // var tampilan='<input type="text" value='.id_meal.' style="display:none;">';
+			      // div1.append=tampilan;
+			 	// })
+
+			 // 	
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+		}
+
+		function pindah_resep(id){
+			// alert(id);
+			// alert(id);
+			delete sessionStorage.id_meal;
+			sessionStorage.id_meal = id;
+			// $.mobile.changePage("resep.html");
+			$.mobile.changePage("resep.html", { transition: "slideup", changeHash: true });
+
+			// $.mobile.changePage("resep.html", {data:{id_meal: id}});
+		}
+		
+	</script>
+	<script>
+		// document.querySelector('div').addEventListener('touchstart', f);
+		// document.querySelector('div').addEventListener('touchend',f);
+		// document.querySelector('div').addEventListener('touchmove',f);
+
+		// function f() {
+		//     // this.style.backgroundColor = "red";
+		//     return this.classList.toggle('myBox');
+		// }
+</script>
+
+</body>
+</html>

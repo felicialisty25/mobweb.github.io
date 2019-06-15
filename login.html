@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="manifest.json"> 
+    <meta name="description" content="Food Blog"> 
+    <meta name="theme-color" content="#2F3BA2" /> 
+	<!-- Include jQuery Mobile stylesheets -->
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+
+	<!-- Include the jQuery library -->
+	<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+	<!-- Include the jQuery Mobile library -->
+	<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+	<link href="css/app.css" rel="stylesheet" />
+	<title>Food Blog</title>
+</head>
+<body>
+  <div data-role="page">
+    <!-- <button id="btnSave">Save</button> -->
+    <div data-role="header" data-theme="b" style="text-align: center;">
+        <a id="btnSave" class="ui-btn-left ui-btn  ui-btn-icon-notext ui-corner-all ui-icon-plus"></a>
+        <h1><img src="images/32.png">
+         Food Blog</h1>
+    </div><!-- /header -->
+    <div role="main" class="ui-content">
+        <h2 class="mc-text-center">Selamat Datang</h2>
+        <p class="mc-top-margin-1-5"><b>Sudah punya akun?</b></p>
+        <a href="sign-in.php" class="ui-btn ui-btn-b ui-corner-all" rel="external">Masuk</a>
+        <p class="mc-top-margin-1-5"><b>Belum punya akun?</b></p>
+        <a href="sign-up.php" class="ui-btn ui-btn-b ui-corner-all" rel="external">Daftar</a>
+        <p></p>
+    </div><!-- /content -->
+</div><!-- /page -->
+<script>
+        if ('serviceWorker' in navigator) { 
+            window.addEventListener('load', () => { 
+                navigator.serviceWorker.register('service-worker.js')
+                .then((reg) => { 
+                    console.log('Service worker registered.', reg);
+                });
+            });
+        } 
+
+
+</script>
+<script>
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        btnSave.style.display = 'block';
+        return false;
+     }); 
+
+    btnSave.addEventListener('click', (e) => {
+        document.getElementById("btnSave").style.display = "none";
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the A2HS prompt');
+            } 
+            else{
+                console.log('User dismissed the A2HS prompt');
+            }
+            deferredPrompt = null;
+        });
+    }); 
+
+//     var deferredPrompt;
+
+//     window.addEventListener('beforeinstallprompt', function(e) {
+//         console.log('beforeinstallprompt Event fired');
+//         e.preventDefault();
+
+//   // Stash the event so it can be triggered later.
+//   deferredPrompt = e;
+
+//   return false;
+// });
+//     btnSave.addEventListener('click', function() {
+//         if(deferredPrompt !== undefined) {
+//     deferredPrompt.prompt();
+//     deferredPrompt.userChoice.then(function(choiceResult) {
+
+//         console.log(choiceResult.outcome);
+
+//         if(choiceResult.outcome == 'dismissed') {
+//             console.log('User cancelled home screen install');
+//         }
+//         else {
+//             console.log('User added to home screen');
+//         }
+//       deferredPrompt = null;
+//       // btnSave.style.display = 'none';
+//   });
+// }
+// });
+</script>
+
+
+
+</body>
+</html>
